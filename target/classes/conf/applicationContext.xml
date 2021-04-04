@@ -24,11 +24,12 @@
     <!--声明mybatis的扫描器,创建dao对象-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-        <property name="basePackage" value="com.hzmyself.crm.settings.dao"/>
+        <property name="basePackage" value="com.hzmyself.crm.settings.dao,com.hzmyself.crm.workbench.dao"/>
     </bean>
 
     <!--声明service的注解@Service所在的包名类-->
-    <context:component-scan base-package="com.hzmyself.crm.settings.service"/>
+    <context:component-scan base-package="com.hzmyself.crm.settings.service,
+                                          com.hzmyself.crm.workbench.service"/>
 
     <!--声明切面类对象-->
 <!--    <bean id="loginAspect" class="com.hzmyself.crm.aspect.LoginAspect"/>-->
