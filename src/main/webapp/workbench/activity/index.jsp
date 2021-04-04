@@ -20,7 +20,31 @@ request.getContextPath() + "/";
 <script type="text/javascript">
 
 	$(function(){
-		
+		//为创建按钮绑定事件,打开添加操作的模态窗口
+		$("#addBtn").click(function () {
+			/*
+			操作模态窗口的方式:
+				找到需要操作的模态窗口jquery对象,调用modal方法,为该方法传递参数show:打开模态窗口 hide:隐藏模态窗口
+			 */
+			$.ajax({
+				url:"activity/getUserList.do",
+				data:{},
+				type:"get",
+				dataType:"json",
+				success:function (data) {
+					var html = "<option></option>";
+
+					$.each(data,function (i,n) {
+						html += "<option value='"+ n.id +"' >"+ n.name +"</option>"
+					})
+					$("#create-owner").html(html);
+
+				}
+			})
+
+			$("#createActivityModal").modal("show");
+
+		})
 		
 		
 	});
@@ -46,10 +70,7 @@ request.getContextPath() + "/";
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="create-owner">
 								</select>
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
@@ -208,7 +229,7 @@ request.getContextPath() + "/";
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
