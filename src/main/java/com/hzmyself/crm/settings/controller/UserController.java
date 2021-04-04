@@ -34,7 +34,7 @@ public class UserController {
         try {
             user = userServicevice.login(loginAct,loginPwd,ip);
             request.getSession().setAttribute("user",user);
-//            json = PrintJson.printJsonFlag(response,true);
+            json = PrintJson.printJsonFlag(response,true);
         } catch (Exception e) {
             e.printStackTrace();
             String msg = e.getMessage();

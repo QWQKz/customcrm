@@ -1,15 +1,11 @@
 package com.hzmyself.crm.settings.service.impl;
 
 import com.hzmyself.crm.exception.LoginException;
-import com.hzmyself.crm.exception.PermissionException;
 import com.hzmyself.crm.settings.dao.UserDao;
 import com.hzmyself.crm.settings.entity.User;
 import com.hzmyself.crm.settings.service.UserService;
 import com.hzmyself.crm.utils.DateTimeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
