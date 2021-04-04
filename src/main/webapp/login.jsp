@@ -21,7 +21,7 @@ request.getContextPath() + "/";
 			//为登录按钮绑定事件,执行登录操作
 			$("#submitBtn").click(function () {
 				// alert("执行登录操作");
-
+				login();
 			})
 
 			//为当前登录页窗口绑定敲键盘事件
@@ -49,7 +49,7 @@ request.getContextPath() + "/";
 					"loginPwd":loginPwd
 				},
 				type:"post",
-				// dataType:"json",
+				dataType:"json",
 				success:function (data) {
 					/*
 						data:{"success":true/false,"msg":"登录失败原因"}

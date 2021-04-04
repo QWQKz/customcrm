@@ -1,6 +1,6 @@
 package com.hzmyself.crm.exception;
 
-public class LoginException extends Exception {
+public class LoginException extends RuntimeException {
     private static final long serialVersionUID = -1668707977736987938L;
     //异常信息
     public String message;

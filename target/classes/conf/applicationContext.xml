@@ -30,14 +30,32 @@
     <!--声明service的注解@Service所在的包名类-->
     <context:component-scan base-package="com.hzmyself.crm.settings.service"/>
 
-    <!--事务配置:注解的配置,aspectj的配置-->
-    <!-- 开启事务注解驱动，基于注解的声明式事务 -->
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <!--声明切面类对象-->
+<!--    <bean id="loginAspect" class="com.hzmyself.crm.aspect.LoginAspect"/>-->
+<!--    <aop:aspectj-autoproxy />-->
+<!--    <context:component-scan base-package="com.hzmyself.crm.aspect"/>-->
+<!--    &lt;!&ndash; 开启注解对AOP的支持 &ndash;&gt;-->
+<!--    <aop:aspectj-autoproxy/>-->
 
-    <bean id="transactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource" />
-    </bean>
+    <!--声明式事务处理-->
+    <!--1.事务管理器对象-->
+<!--    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+<!--        <property name="dataSource" ref="dataSource"/>-->
+<!--    </bean>-->
+<!--    &lt;!&ndash;2.声明业务方法它的事务属性&ndash;&gt;-->
+<!--    <tx:advice id="exAdvice" transaction-manager="transactionManager">-->
+<!--        <tx:attributes>-->
+<!--            <tx:method name="login" propagation="REQUIRED" isolation="DEFAULT"-->
+<!--                       rollback-for="com.hzmyself.crm.exception.LoginException"/>-->
+<!--        </tx:attributes>-->
+<!--    </tx:advice>-->
+    <!--配置aop-->
+<!--    <aop:config>-->
+<!--        &lt;!&ndash;配置切入点表达式&ndash;&gt;-->
+<!--        <aop:pointcut id="loginPt" expression="execution(* *..service..*.*(..))"/>-->
+<!--        &lt;!&ndash;配置增强器：关联advice和pointcut&ndash;&gt;-->
+<!--        <aop:advisor advice-ref="loginAspect" pointcut-ref="loginPt"/>-->
+<!--    </aop:config>-->
 
 
 </beans>
