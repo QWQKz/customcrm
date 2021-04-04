@@ -13,6 +13,7 @@
     <!--设置别名-->
     <typeAliases>
         <package name="com.hzmyself.crm.settings.entity"/>
+        <package name="com.hzmyself.crm.workbench.entity"/>
     </typeAliases>
 
     <mappers>
@@ -23,6 +24,7 @@
                 2.mapper文件和dao接口必须在同一目录
         -->
         <package name="com.hzmyself.crm.settings.dao"/>
+        <package name="com.hzmyself.crm.workbench.dao"/>
     </mappers>
 
 </configuration>
