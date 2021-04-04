@@ -27,7 +27,6 @@ public class UserController extends BaseExceptionHandleAction  {
         loginPwd = MD5Util.getMD5(loginPwd);
         //接受ip地址
         String ip = request.getRemoteAddr();
-        System.out.println(ip+"===================");
         User user = null;
         try {
             user = userServicevice.login(loginAct,loginPwd,ip);
@@ -36,7 +35,6 @@ public class UserController extends BaseExceptionHandleAction  {
         } catch (Exception e) {
             throw new LoginException(e.getMessage());
         }
-        System.out.println(json+"================================");
         return json;
 
     }
