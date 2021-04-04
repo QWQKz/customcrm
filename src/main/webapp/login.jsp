@@ -51,19 +51,16 @@ request.getContextPath() + "/";
 				type:"post",
 				// dataType:"json",
 				success:function (data) {
-					alert(data.result);
-					// alert(data.msg);
 					/*
 						data:{"success":true/false,"msg":"登录失败原因"}
 					 */
 					//如果登录成功
-					// if(data.success){
-						window.location.href = "workbench/index.html"
-					// }
-					// else{
-					// 	$("#msg").html(data.msg);
-					// }
-
+					if(data.success){
+						window.location.href = "workbench/index.jsp"
+					}
+					else{
+						$("#msg").html(data.msg);
+					}
 
 				}
 			})
@@ -84,7 +81,7 @@ request.getContextPath() + "/";
 		<div class="page-header">
 			<h1>登录</h1>
 		</div>
-		<form action="workbench/index.html" class="form-horizontal" role="form">
+		<form action="workbench/index.jsp" class="form-horizontal" role="form">
 			<div class="form-group form-group-lg">
 				<div style="width: 350px;">
 					<input class="form-control" type="text" placeholder="用户名" id="loginAct">
