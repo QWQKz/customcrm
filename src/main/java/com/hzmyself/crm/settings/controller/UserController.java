@@ -27,6 +27,7 @@ public class UserController extends BaseExceptionHandleAction  {
         loginPwd = MD5Util.getMD5(loginPwd);
         //接受ip地址
         String ip = request.getRemoteAddr();
+        System.out.println(ip);
         User user = null;
         try {
             user = userServicevice.login(loginAct,loginPwd,ip);

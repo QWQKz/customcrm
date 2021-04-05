@@ -32,19 +32,18 @@ request.getContextPath() + "/";
 				type:"get",
 				dataType:"json",
 				success:function (data) {
-					var html = "<option></option>";
-
+					var html = "<option>--请选择--</option>";
 					$.each(data,function (i,n) {
-						html += "<option value='"+ n.id +"' >"+ n.name +"</option>"
+						html += "<option value='"+ n.id +"' >"+ n.name +"</option>";
 					})
 					$("#create-owner").html(html);
-
+					var defaultid = "${user.id}";
+					$("#create-owner").val(defaultid);
+					$("#createActivityModal").modal("show");
 				}
 			})
-
-			$("#createActivityModal").modal("show");
-
 		})
+
 		
 		
 	});
