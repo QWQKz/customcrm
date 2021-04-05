@@ -3,5 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzmyself.crm.workbench.dao.ActivityDao">
+    <insert id="saveActivity" parameterType="activity">
+        insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy,editTime,editBy)
+        values(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy},#{createTime},#{createBy})
+    </insert>
 
 </mapper>
