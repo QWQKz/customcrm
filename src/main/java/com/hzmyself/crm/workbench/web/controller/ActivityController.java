@@ -4,11 +4,13 @@ import com.hzmyself.crm.settings.entity.User;
 import com.hzmyself.crm.settings.service.UserService;
 import com.hzmyself.crm.utils.DateTimeUtil;
 import com.hzmyself.crm.utils.UUIDUtil;
+import com.hzmyself.crm.vo.PaginationVO;
 import com.hzmyself.crm.workbench.entity.Activity;
 import com.hzmyself.crm.workbench.service.ActivityService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -50,5 +52,28 @@ public class ActivityController {
         Map<String,Boolean> map = new HashMap<>();
         map.put("success",result);
         return map;
+    }
+
+    @RequestMapping("pageList.do")
+    @ResponseBody
+    public PaginationVO<Activity> getPageList(Activity ac, @RequestParam("pageNo")Integer pageNo,@RequestParam("pageSize")Integer pageSize){
+        //计算出略过的记录数
+        int skipCount = (pageNo-1)*pageSize;//
+        Map<String,Object> map = new HashMap<>();
+        System.out.println(ac.getOwner()+"----------------------------");
+        System.out.println(ac.getName());
+        System.out.println(ac.getStartDate());
+        System.out.println(ac.getEndDate()+"---------------------------");
+        map.put("owner",ac.getOwner());
+        map.put("name",ac.getName());
+        map.put("startDate",ac.getStartDate());
+        map.put("endDate",ac.getEndDate());
+        map.put("skipCount",skipCount);
+        map.put("pageSize",pageSize);
+        PaginationVO<Activity> vo = activityService.getPageList(map);
+        return vo;
+
+
+
     }
 }

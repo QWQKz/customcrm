@@ -19,7 +19,6 @@ request.getContextPath() + "/";
 
 	$(function(){
 
-
 		//为创建按钮绑定事件,打开添加操作的模态窗口
 		$("#addBtn").click(function () {
 
@@ -84,19 +83,73 @@ request.getContextPath() + "/";
 
 						//关闭模态窗口
 						$("#createActivityModal").modal("hide");
+						pageList(1,2);
 					}else{
 						alert("添加市场活动失败!");
 					}
-
-
 				}
 			})
-
 		})
 
-		
-		
+		//页面加载完毕后触发一个方法
+		pageList(1,2);
+
+		//为查询按钮绑定事件
+		$("#searchBtn").click(function () {
+			pageList(1,2);
+		})
+
+
 	});
+
+	/*
+	 对于所有的关系型数据库,做前端的分页操作的基本组件
+	 就是pageNo,pageSize
+	 pageNo : 页码
+	 pageSize : 每页展示的条数
+
+	 pageList()使用场景:
+	 	1.点击左侧菜单中的"市场活动"超链接,需要刷新市场活动列表
+	 	2.增删改后
+	 	3.点击查询按钮
+	 	4.点击分页组件时
+	 */
+	function pageList(pageNo,pageSize) {
+		$.ajax({
+			url:"activity/pageList.do",
+			data:{
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+				"name":$.trim($("#search-name").val()),
+				"owner":$.trim($("#search-owner").val()),
+				"startDate":$.trim($("#search-startDate").val()),
+				"endDate":$.trim($("#search-endDate").val()),
+
+			},
+			type:"get",
+			dataType:"json",
+			success:function (data) {
+				// data ---> 我们需要的 [{市场活动1},{2},{3}]
+				// data ---> 一会分页插件需要的:查询出来的总记录数 {"total":100}
+				// 返回的json数据格式  {"total":100,"dataList":[{activity对象1},{activity对象2},{activity对象3}...]}
+				var html = "";
+				$.each(data.dataList,function (i,activity) {
+
+				 	html+= '<tr class="active">';
+					html+= '<td><input type="checkbox" value="'+ activity.id +'" /></td>';
+					html+= '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+ activity.name +'</a></td>';
+					html+= '<td>'+ activity.owner +'</td>';
+					html+= '<td>'+ activity.startDate +'</td>';
+					html+= '<td>'+ activity.endDate +'</td>';
+					html+= '</tr>';
+				})
+				$("#activityBody").html(html);
+
+			}
+		})
+
+
+	}
 	
 </script>
 </head>
@@ -247,14 +300,14 @@ request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name"/>
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner" />
 				    </div>
 				  </div>
 
@@ -262,17 +315,17 @@ request.getContextPath() + "/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input class="form-control time" type="text" id="search-startDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control time" type="text" id="search-endDate">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="searchBtn">查询</button>
 				  
 				</form>
 			</div>
@@ -295,21 +348,9 @@ request.getContextPath() + "/";
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-                            <td>2020-10-10</td>
-                            <td>2020-10-20</td>
-                        </tr>
+					<tbody id="activityBody">
+
+
 					</tbody>
 				</table>
 			</div>
