@@ -1,4 +1,4 @@
-/**
+﻿/**
  * bs_pagination simple localization - ENGLISH
  *
  * DO NOT CHANGE this file, as it will be overwritten in next update.

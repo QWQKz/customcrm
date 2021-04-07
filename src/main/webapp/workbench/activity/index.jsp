@@ -14,7 +14,9 @@ request.getContextPath() + "/";
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
+	<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js" charset="GBK"></script>
+	<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -96,8 +98,67 @@ request.getContextPath() + "/";
 
 		//为查询按钮绑定事件
 		$("#searchBtn").click(function () {
+			$("#hidden-name").val($.trim($("#search-name").val()));
+			$("#hidden-owner").val($.trim($("#search-owner").val()));
+			$("#hidden-startDate").val($.trim($("#search-startDate").val()));
+			$("#hidden-endDate").val($.trim($("#search-endDate").val()));
+
 			pageList(1,2);
 		})
+
+		$("#qx").click(function () {
+			$("input[name=xz]").prop("checked",this.checked);
+		})
+		//动态生成的元素不能以普通绑定事件的形式进行操作
+		// $("input[name=xz]").click(function () {
+		// })
+		//动态生成的元素,我们要以on方法的形式来触发事件
+		/*
+			语法:
+				$(需要绑定元素的有效的外层元素).on(绑定事件的方式,需要绑定的元素的jquery对象,回调函数)
+		 */
+		$("#activityBody").on("click",$("input[name=xz]"),function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
+		})
+
+		$("#deleteBtn").click(function () {
+			//找到复选框中被选中的jquery对象
+			var $xz = $("input[name=xz]:checked");
+			if($xz.length==0){
+				alert("请选择你要删除的记录");
+			//可能是单选、也可能是多选
+			}else{
+				if(confirm("确定删除所选中的记录吗?")){
+					var param = "";
+					//将$xz中的每一个dom对象遍历出来,取其value值,就相当于取得了需要删除的记录id
+					for(var i = 0;i <$xz.length;i++){
+						param += "ids="+$($xz[i]).val();
+						//如果不是最后一个元素,需要在后面追加一个&符
+						if(i<$xz.length-1){
+							param += "&";
+						}
+					}
+					$.ajax({
+						url:"activity/delete.do",
+						data:param,
+						type:"post",
+						dataType:"json",
+						success:function (data) {
+							if(data.success){
+								alert("删除市场活动成功");
+								pageList(1,2);
+							}else{
+								alert("删除市场活动失败");
+							}
+						}
+					})
+				}
+
+
+			}
+
+		})
+
 
 
 	});
@@ -115,6 +176,13 @@ request.getContextPath() + "/";
 	 	4.点击分页组件时
 	 */
 	function pageList(pageNo,pageSize) {
+		//将全选框的 √ 默认取消
+		$("#qx").prop("checked",false);
+		//查询前,将隐藏域中保存的信息取出来,重新赋值给搜索框
+		$("#search-name").val($.trim($("#hidden-name").val()));
+		$("#search-owner").val($.trim($("#hidden-owner").val()));
+		$("#search-startDate").val($.trim($("#hidden-startDate").val()));
+		$("#search-endDate").val($.trim($("#hidden-endDate").val()));
 		$.ajax({
 			url:"activity/pageList.do",
 			data:{
@@ -136,15 +204,36 @@ request.getContextPath() + "/";
 				$.each(data.dataList,function (i,activity) {
 
 				 	html+= '<tr class="active">';
-					html+= '<td><input type="checkbox" value="'+ activity.id +'" /></td>';
+					html+= '<td><input type="checkbox" name="xz" value="'+ activity.id +'" /></td>';
 					html+= '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+ activity.name +'</a></td>';
 					html+= '<td>'+ activity.owner +'</td>';
 					html+= '<td>'+ activity.startDate +'</td>';
 					html+= '<td>'+ activity.endDate +'</td>';
 					html+= '</tr>';
-				})
+				});
 				$("#activityBody").html(html);
 
+				//计算总条数   Math.ceil()
+				var totalPages = data.total%pageSize==0?(data.total/pageSize):(parseInt(data.total/pageSize)+1);
+				//数据处理完毕之后,结合分页查询,对前端展现分页信息
+				$("#activityPage").bs_pagination({
+					currentPage:pageNo,//页码
+					rowsPerPage:pageSize,//每页显示的记录条数
+					maxRowsPerPage: 20,//每页最多显示的记录条数
+					totalPages:totalPages,//总页数
+					totalRows:data.total,//总记录数
+
+					visiblePageLinks: 3,//显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					onChangePage:function (event,data) {
+						pageList(data.currentPage,data.rowsPerPage);
+					}
+				})
 			}
 		})
 
@@ -154,6 +243,10 @@ request.getContextPath() + "/";
 </script>
 </head>
 <body>
+<input type="hidden" id="hidden-name">
+<input type="hidden" id="hidden-owner">
+<input type="hidden" id="hidden-startDate">
+<input type="hidden" id="hidden-endDate">
 
 	<!-- 创建市场活动的模态窗口 -->
 	<div class="modal fade" id="createActivityModal" role="dialog">
@@ -333,7 +426,7 @@ request.getContextPath() + "/";
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>
@@ -341,7 +434,7 @@ request.getContextPath() + "/";
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="qx" /></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
@@ -354,39 +447,10 @@ request.getContextPath() + "/";
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
+				<div id="activityPage">
+
 				</div>
 			</div>
 			

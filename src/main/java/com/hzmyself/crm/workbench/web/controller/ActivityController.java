@@ -32,7 +32,6 @@ public class ActivityController {
     @ResponseBody
     public List<User> getUserList(){
         List<User> userList = userService.getUserList();
-        System.out.println("=================================="+userList.size());
         return userList;
     }
 
@@ -54,16 +53,12 @@ public class ActivityController {
         return map;
     }
 
-    @RequestMapping("pageList.do")
+    @RequestMapping(value = "pageList.do",produces = "application/json;charset=UTF-8")
     @ResponseBody
     public PaginationVO<Activity> getPageList(Activity ac, @RequestParam("pageNo")Integer pageNo,@RequestParam("pageSize")Integer pageSize){
         //计算出略过的记录数
         int skipCount = (pageNo-1)*pageSize;//
         Map<String,Object> map = new HashMap<>();
-        System.out.println(ac.getOwner()+"----------------------------");
-        System.out.println(ac.getName());
-        System.out.println(ac.getStartDate());
-        System.out.println(ac.getEndDate()+"---------------------------");
         map.put("owner",ac.getOwner());
         map.put("name",ac.getName());
         map.put("startDate",ac.getStartDate());
@@ -72,8 +67,15 @@ public class ActivityController {
         map.put("pageSize",pageSize);
         PaginationVO<Activity> vo = activityService.getPageList(map);
         return vo;
+    }
 
-
+    @RequestMapping("/delete.do")
+    @ResponseBody
+    public Map<String,Object> delete(String[] ids){
+        boolean flag = activityService.delete(ids);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",flag);
+        return map;
 
     }
 }

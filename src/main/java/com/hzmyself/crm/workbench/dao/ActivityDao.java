@@ -8,10 +8,9 @@ import java.util.Map;
 public interface ActivityDao {
     int saveActivity(Activity activity);
 
-    int getTotalByCondition();
+    int getTotalByCondition(Map<String,Object> map);
 
     List<Activity> getActivityListByCondition(Map<String,Object> map);
 
-
-
+    int delete(String[] ids);
 }
