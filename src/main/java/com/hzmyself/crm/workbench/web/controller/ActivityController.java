@@ -78,4 +78,29 @@ public class ActivityController {
         return map;
 
     }
+
+    @RequestMapping("/getUserListAndActivity.do")
+    @ResponseBody
+    public Map<String,Object> getUserListAndActivity(String id){
+        Map<String,Object> map = activityService.getUserListAndActivity(id);
+        System.out.println(map.toString());
+        return map;
+    }
+
+    @RequestMapping("update.do")
+    @ResponseBody
+    public Map<String,Boolean> updateActivity(HttpServletRequest request,Activity activity){
+        //修改时间,当前系统时间
+        String updateTime = DateTimeUtil.getSysTime();
+        //修改人:当前登录用户
+        User user = (User) request.getSession().getAttribute("user");
+        String editBy = user.getName();
+        activity.setEditTime(updateTime);
+        activity.setEditBy(editBy);
+        boolean result = activityService.updateActivity(activity);
+        Map<String,Boolean> map = new HashMap<>();
+        map.put("success",result);
+        return map;
+    }
+
 }
