@@ -17,4 +17,6 @@ public interface ActivityDao {
     Activity getActivityById(String id);
 
     int updateActivity(Activity activity);
+
+    Activity detail(String id);
 }

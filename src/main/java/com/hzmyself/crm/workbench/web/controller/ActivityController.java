@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,14 +29,14 @@ public class ActivityController {
     @Resource
     private ActivityService activityService;
 
-    @RequestMapping("/getUserList.do")
+    @RequestMapping("getUserList.do")
     @ResponseBody
     public List<User> getUserList(){
         List<User> userList = userService.getUserList();
         return userList;
     }
 
-    @RequestMapping("/save.do")
+    @RequestMapping("save.do")
     @ResponseBody
     public Map<String,Boolean> saveActivity(HttpServletRequest request,Activity activity){
         String id = UUIDUtil.getUUID();
@@ -69,7 +70,7 @@ public class ActivityController {
         return vo;
     }
 
-    @RequestMapping("/delete.do")
+    @RequestMapping("delete.do")
     @ResponseBody
     public Map<String,Object> delete(String[] ids){
         boolean flag = activityService.delete(ids);
@@ -79,7 +80,7 @@ public class ActivityController {
 
     }
 
-    @RequestMapping("/getUserListAndActivity.do")
+    @RequestMapping("getUserListAndActivity.do")
     @ResponseBody
     public Map<String,Object> getUserListAndActivity(String id){
         Map<String,Object> map = activityService.getUserListAndActivity(id);
@@ -102,5 +103,15 @@ public class ActivityController {
         map.put("success",result);
         return map;
     }
+
+    @RequestMapping("detail.do")
+    public ModelAndView ToDetailJsp(String id){
+        ModelAndView mv = new ModelAndView();
+        Activity activity = activityService.detail(id);
+        mv.addObject("activity",activity);
+        mv.setViewName("../workbench/activity/detail.jsp");
+        return mv;
+    }
+
 
 }

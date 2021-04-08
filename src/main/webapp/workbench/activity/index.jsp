@@ -281,7 +281,7 @@ request.getContextPath() + "/";
 
 				 	html+= '<tr class="active">';
 					html+= '<td><input type="checkbox" name="xz" value="'+ activity.id +'" /></td>';
-					html+= '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+ activity.name +'</a></td>';
+					html+= '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'activity/detail.do?id='+activity.id+'\';">'+ activity.name +'</a></td>';
 					html+= '<td>'+ activity.owner +'</td>';
 					html+= '<td>'+ activity.startDate +'</td>';
 					html+= '<td>'+ activity.endDate +'</td>';

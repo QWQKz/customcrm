@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzmyself.crm.workbench.dao.ActivityDao">
-    <insert id="saveActivity" parameterType="activity">
+    <insert id="saveActivity" parameterType="Activity">
         insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy,editTime,editBy)
         values(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy},#{createTime},#{createBy})
     </insert>
@@ -30,7 +30,7 @@
         </where>
     </select>
     
-    <select id="getActivityListByCondition" resultType="activity">
+    <select id="getActivityListByCondition" resultType="Activity">
         select
         a.id,
         a.name,
@@ -70,5 +70,41 @@
             #{acid}
         </foreach>
     </delete>
+    
+    <select id="getActivityById" resultType="Activity">
+        select * from tbl_activity where id = #{id}
+    </select>
+    <select id="detail" resultType="activity">
+        select
+            a.id,
+            u.name as owner,
+            a.name,
+            a.startDate,
+            a.endDate,
+            a.cost,
+            a.description,
+            a.createTime,
+            a.createBy,
+            a.editTime,
+            a.editBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where a.id=#{id}
+
+    </select>
+    
+    <update id="updateActivity">
+        update tbl_activity set
+            owner = #{owner},
+            name = #{name},
+            startDate = #{startDate},
+            endDate = #{endDate},
+            cost = #{cost},
+            description = #{description},
+            editTime = #{editTime},
+            editBy = #{editBy}
+            where id = #{id}
+    </update>
 
 </mapper>
